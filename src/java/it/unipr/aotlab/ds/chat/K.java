@@ -2,7 +2,7 @@ package it.unipr.aotlab.ds.chat;
 
 public class K {
 
-  public static final int SIZE = 1024;
+  public static final int SIZE = 256;
   
   public static final int UDP_CLIENT_PORT = 44444;
   public static final int TCP_SERVER_PORT = 44446;

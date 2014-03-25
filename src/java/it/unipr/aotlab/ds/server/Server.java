@@ -2,6 +2,7 @@ package it.unipr.aotlab.ds.server;
 
 import it.unipr.aotlab.ds.chat.K;
 import it.unipr.aotlab.ds.chat.Utils;
+import it.unipr.aotlab.ds.chat.command.Command;
 import it.unipr.aotlab.ds.chat.command.Join;
 import it.unipr.aotlab.ds.chat.command.Send;
 
@@ -36,7 +37,7 @@ public class Server {
     try {
       // Open TCP connection
       m_incoming_conn = new ServerSocket(K.TCP_SERVER_PORT);
-
+      System.out.println("Server timeout: " + m_incoming_conn.getSoTimeout());
       // Open UDP socket
       m_multicastConn = new MulticastSocket(K.UDP_SERVER_PORT);
       m_multicastGroup = InetAddress.getByName(K.ADDRESS_UDP);
@@ -49,17 +50,21 @@ public class Server {
   private void listen() {
     try {
       Socket client_socket = m_incoming_conn.accept();
+      //client_socket.setKeepAlive(true);
+      System.out.println("Received connection request");
+
       ObjectInputStream is = new ObjectInputStream(
           client_socket.getInputStream());
-
+      
+      System.out.println("Reading object ...");
       Object o = is.readObject();
-      System.out.println("Received connection request.");
-
+      System.out.println("Object readed.");
+      
       String name = new String();
       boolean accepted = false;
 
       // Check message type
-      if (o instanceof Join){
+      if (o instanceof Join) {
         Join msg = (Join) o;
         name = msg.getName();
 
@@ -70,23 +75,22 @@ public class Server {
           System.out.println("Username '" + name + "' currently in use.");
         }
       }
-      if (o instanceof Send){
+      if (o instanceof Send) {
         // Reply in multicast group
-        Send msg = (Send)o;
-        System.out.println("Received Send message (" + msg.getName() +", " + msg.getMessage() +") ..");
-        byte[] buffer = Utils.toByteArray(msg);
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, m_multicastGroup, K.UDP_CLIENT_PORT);
-        m_multicastConn.send(packet);
+        Send msg = (Send) o;
+        System.out.println("Received Send message (" + msg.getName() + ", "
+            + msg.getMessage() + ") ..");
+        multicast(msg);
         System.out.println("Broadcasted message.");
       }
 
-      if(accepted){
+      if (accepted) {
         ObjectOutputStream os = new ObjectOutputStream(
             client_socket.getOutputStream());
-        
         Join msg = new Join(name, accepted);
         os.writeObject(msg);
         os.flush();
+        multicast(msg);
       }
 
       client_socket.close();
@@ -94,6 +98,22 @@ public class Server {
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void multicast(Command com) {
+    try {
+      byte[] buffer = null;
+      if(com instanceof Send)
+        buffer = Utils.toByteArray((Send)com);
+      if(com instanceof Join)
+        buffer = Utils.toByteArray((Join)com);
+      
+      DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+          m_multicastGroup, K.UDP_CLIENT_PORT);
+      m_multicastConn.send(packet);
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -114,7 +134,7 @@ public class Server {
       public void run() {
         System.out.println("Incoming connection thread running.");
         while (true) {
-          System.out.println("Wait for connection ...");
+          System.out.println("Thread iteration ...");
           listen();
         }
       }
