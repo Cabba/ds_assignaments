@@ -4,6 +4,7 @@ import it.unipr.aotlab.ds.chat.K;
 import it.unipr.aotlab.ds.chat.Utils;
 import it.unipr.aotlab.ds.chat.command.Command;
 import it.unipr.aotlab.ds.chat.command.Join;
+import it.unipr.aotlab.ds.chat.command.Leave;
 import it.unipr.aotlab.ds.chat.command.Send;
 
 import java.io.IOException;
@@ -83,6 +84,14 @@ public class Server {
         multicast(msg);
         System.out.println("Broadcasted message.");
       }
+      if(o instanceof Leave){
+    	  Leave msg = (Leave)o;
+    	  name = msg.getName();
+    	  boolean removed = m_user_list.remove(name);
+    	  if(removed==true) System.out.println("User removed");
+    	  else System.out.println("User not removed.");
+    	  multicast(msg);
+      }
 
       if (accepted) {
         ObjectOutputStream os = new ObjectOutputStream(
@@ -109,6 +118,8 @@ public class Server {
         buffer = Utils.toByteArray((Send)com);
       if(com instanceof Join)
         buffer = Utils.toByteArray((Join)com);
+      if(com instanceof Leave)
+    	buffer = Utils.toByteArray((Leave)com);
       
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
           m_multicastGroup, K.UDP_CLIENT_PORT);

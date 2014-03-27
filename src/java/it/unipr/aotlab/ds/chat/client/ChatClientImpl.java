@@ -14,104 +14,122 @@ import it.unipr.aotlab.ds.chat.K;
 import it.unipr.aotlab.ds.chat.Utils;
 import it.unipr.aotlab.ds.chat.command.Command;
 import it.unipr.aotlab.ds.chat.command.Join;
+import it.unipr.aotlab.ds.chat.command.Leave;
 import it.unipr.aotlab.ds.chat.command.Send;
 
-public class ChatClientImpl implements ChatClient{
-  
-  private Socket m_connectionSocket;
-  private MulticastSocket m_multicastSocket;
-  
-  
-  @Override
-  public Command receive(){
-    System.out.println("Receive ...");
-    final byte[] buffer = new byte[K.SIZE];
-    DatagramPacket data = new DatagramPacket(buffer, buffer.length);
-    Object o = null;
-    try {
-    m_multicastSocket.receive(data);
-    o = Utils.toObject(data.getData());
-    } catch (ClassNotFoundException | IOException e) {
-      e.printStackTrace();
-    }
-    return (Command)o;
-  }
+public class ChatClientImpl implements ChatClient {
 
-  @Override
-  public boolean join(String n){
-    boolean accepted = false;
-    
-    try{
-      m_connectionSocket = new Socket(K.ADDRESS_TCP, K.TCP_SERVER_PORT);
+	private Socket m_connectionSocket;
+	private MulticastSocket m_multicastSocket;
 
-      ObjectOutputStream os = new ObjectOutputStream(
-          m_connectionSocket.getOutputStream());
+	@Override
+	public Command receive() {
+		System.out.println("Receive ...");
+		final byte[] buffer = new byte[K.SIZE];
+		DatagramPacket data = new DatagramPacket(buffer, buffer.length);
+		Object o = null;
+		try {
+			m_multicastSocket.receive(data);
+			o = Utils.toObject(data.getData());
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		return (Command) o;
+	}
 
-      // Sending join message to the server ...
-      Join join = new Join(n);
-      System.out.println("Sending message to server.");
-      os.writeObject(join);
-      os.flush();
+	@Override
+	public boolean join(String n) {
+		boolean accepted = false;
 
-      ObjectInputStream is = new ObjectInputStream(
-          m_connectionSocket.getInputStream());
-      // ... and wait for the reply.
-      Object o = is.readObject();
-      System.out.println("Server has replied.");
+		try {
+			m_connectionSocket = new Socket(K.ADDRESS_TCP, K.TCP_SERVER_PORT);
 
-      // Check server reply
-      if (o instanceof Join) {
-        Join msg = (Join) o;
-        accepted = msg.isAccepted();
-      }
-      m_connectionSocket.close();
+			ObjectOutputStream os = new ObjectOutputStream(
+					m_connectionSocket.getOutputStream());
 
-      // Check the server reply ...
-      if(accepted){
-        System.out.println("Connected");
-        // ... join the multicast group
-        m_multicastSocket = new MulticastSocket(K.UDP_CLIENT_PORT);
-        m_multicastSocket.joinGroup(InetAddress.getByName(K.ADDRESS_UDP));
-      }else{
-        System.out.println("Connection refused");
-      }
-      
-    }catch(IOException e){
-      e.printStackTrace();
-    }catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    return accepted;
-  }
+			// Sending join message to the server ...
+			Join join = new Join(n);
+			System.out.println("Sending message to server.");
+			os.writeObject(join);
+			os.flush();
 
-  @Override
-  public void send(String n, String m) { 
-    try {
-      
-      m_connectionSocket = new Socket(K.ADDRESS_TCP, K.TCP_SERVER_PORT);
-      
-      ObjectOutputStream os = new ObjectOutputStream(
-          m_connectionSocket.getOutputStream());
-      
-      // Send message to the server ...
-      Send send = new Send(n, m);
-      System.out.println("Sending message (" + n + ", " + m + ") to server.");
-      os.writeObject(send);
-      os.flush();
-      m_connectionSocket.close();
-      os.close();
-      System.out.println("Message sent.");
-      
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
+			ObjectInputStream is = new ObjectInputStream(
+					m_connectionSocket.getInputStream());
+			// ... and wait for the reply.
+			Object o = is.readObject();
+			System.out.println("Server has replied.");
 
-  @Override
-  public void leave(String n) {
-  
-  }
+			// Check server reply
+			if (o instanceof Join) {
+				Join msg = (Join) o;
+				accepted = msg.isAccepted();
+			}
+			m_connectionSocket.close();
 
+			// Check the server reply ...
+			if (accepted) {
+				System.out.println("Connected");
+				// ... join the multicast group
+				m_multicastSocket = new MulticastSocket(K.UDP_CLIENT_PORT);
+				m_multicastSocket.joinGroup(InetAddress
+						.getByName(K.ADDRESS_UDP));
+			} else {
+				System.out.println("Connection refused");
+			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return accepted;
+	}
+
+	@Override
+	public void send(String n, String m) {
+		try {
+
+			m_connectionSocket = new Socket(K.ADDRESS_TCP, K.TCP_SERVER_PORT);
+
+			ObjectOutputStream os = new ObjectOutputStream(
+					m_connectionSocket.getOutputStream());
+
+			// Send message to the server ...
+			Send send = new Send(n, m);
+			System.out.println("Sending message (" + n + ", " + m
+					+ ") to server.");
+			os.writeObject(send);
+			os.flush();
+			m_connectionSocket.close();
+			os.close();
+			System.out.println("Message sent.");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void leave(String n) {
+		try {
+
+			m_connectionSocket = new Socket(K.ADDRESS_TCP, K.TCP_SERVER_PORT);
+
+			ObjectOutputStream os = new ObjectOutputStream(
+					m_connectionSocket.getOutputStream());
+
+			// Send message to the server ...
+			Leave leave = new Leave(n);
+			System.out.println("Sended leave message to server.");
+			os.writeObject(leave);
+			os.flush();
+			m_connectionSocket.close();
+			os.close();
+			System.out.println("Message sent.");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
