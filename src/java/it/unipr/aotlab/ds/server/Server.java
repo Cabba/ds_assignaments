@@ -130,15 +130,15 @@ public class Server {
   public void start() {
     startup();
     // Incoming connection thread
-    new Thread(new Runnable() {
-      public void run() {
+   // new Thread(new Runnable() {
+   //   public void run() {
         System.out.println("Incoming connection thread running.");
         while (true) {
           System.out.println("Thread iteration ...");
           listen();
         }
-      }
-    }).start();
+  //    }
+  //  }).start();
   }
 
   public static void main(String[] args) {

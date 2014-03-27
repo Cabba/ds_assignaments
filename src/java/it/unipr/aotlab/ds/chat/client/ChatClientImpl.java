@@ -89,8 +89,10 @@ public class ChatClientImpl implements ChatClient{
     try {
       
       m_connectionSocket = new Socket(K.ADDRESS_TCP, K.TCP_SERVER_PORT);
+      
       ObjectOutputStream os = new ObjectOutputStream(
           m_connectionSocket.getOutputStream());
+      
       // Send message to the server ...
       Send send = new Send(n, m);
       System.out.println("Sending message (" + n + ", " + m + ") to server.");
