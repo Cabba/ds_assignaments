@@ -1,4 +1,4 @@
-package it.unipr.aotlab.ds.chat.client;
+package it.unipr.aotlab.ds.chat.socket;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,11 +12,12 @@ import java.net.SocketException;
 
 import it.unipr.aotlab.ds.chat.K;
 import it.unipr.aotlab.ds.chat.Utils;
+import it.unipr.aotlab.ds.chat.client.ChatClient;
 import it.unipr.aotlab.ds.chat.command.Command;
 import it.unipr.aotlab.ds.chat.command.Join;
 import it.unipr.aotlab.ds.chat.command.Send;
 
-public class ChatClientImpl implements ChatClient{
+public class ChatClientSockImpl implements ChatClient{
   
   private Socket m_connectionSocket;
   private MulticastSocket m_multicastSocket;

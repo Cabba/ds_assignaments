@@ -1,4 +1,4 @@
-package it.unipr.aotlab.ds.server;
+package it.unipr.aotlab.ds.chat.socket;
 
 import it.unipr.aotlab.ds.chat.K;
 import it.unipr.aotlab.ds.chat.Utils;
@@ -17,7 +17,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Server {
+public class ServerSock {
 
   // CONNECTION
   private ServerSocket m_incoming_conn;
@@ -27,7 +27,7 @@ public class Server {
   // STATE
   private List<String> m_user_list;
 
-  public Server() {
+  public ServerSock() {
     m_user_list = new ArrayList<String>();
   }
 
@@ -142,7 +142,7 @@ public class Server {
   }
 
   public static void main(String[] args) {
-    Server server = new Server();
+    ServerSock server = new ServerSock();
     server.start();
   }
 
