@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/federico/Workspace/Java Library/activemq-all-5.8.0.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Dropbox/Java library/libraries/activemq-all-5.8.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

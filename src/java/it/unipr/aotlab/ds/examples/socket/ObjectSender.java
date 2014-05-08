@@ -1,4 +1,4 @@
-package it.unipr.aotlab.ds.socket;
+package it.unipr.aotlab.ds.examples.socket;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

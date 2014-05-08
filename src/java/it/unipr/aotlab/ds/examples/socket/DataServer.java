@@ -1,53 +1,55 @@
-package it.unipr.aotlab.ds.socket;
+package it.unipr.aotlab.ds.examples.socket;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  *
- * The {@code DataClient} class provides an implementation of a TCP client.
+ * The {@code DataServer} class provides an implementation of a TCP server.
  *
  * @author Agostino Poggi - AOT Lab - DII - University of Parma
  *
 **/
 
-public class DataClient
+public class DataServer
 {
-  private static final int SPORT    = 4444;
-  private static final String SHOST = "localhost";
+  private static final int SPORT = 4444;
 
   /**
-   * Sends a request.
+   * Manages a request and sends a reply.
    *
   **/
-  public void send()
+  public void reply()
   {
     try
     {
-      Socket client = new Socket(SHOST, SPORT);
+      ServerSocket server = new ServerSocket(SPORT);
+
+      Socket client = server.accept();
 
       BufferedReader is  =
           new BufferedReader(new InputStreamReader(client.getInputStream()));
 
       DataOutputStream os = new DataOutputStream(client.getOutputStream());
 
+      System.out.println("Server received: " + is.readLine());
       os.writeBytes("Hello\n");
 
-      System.out.println("Client received: " + is.readLine());
-
       client.close();
+      server.close();
     }
     catch (IOException e)
     {
-      e.printStackTrace();
+        e.printStackTrace();
     }
   }
 
   /**
-   * Runs the client.
+   * Runs the server.
    *
    * @param v  the arguments.
    *
@@ -56,7 +58,6 @@ public class DataClient
   **/
   public static void main(final String[] v)
   {
-    new DataClient().send();
+    new DataServer().reply();
   }
 }
-

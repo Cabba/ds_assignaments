@@ -19,4 +19,4 @@
  * ObjectReceiver process needs to be started before the ObjectSender process.
  *
 **/
-package it.unipr.aotlab.ds.socket;
+package it.unipr.aotlab.ds.examples.socket;
