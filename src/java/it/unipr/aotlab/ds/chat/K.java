@@ -22,4 +22,5 @@ public class K {
 	public final static String BROKER_URL = "tcp://localhost:61616";
 	public final static String BROKER_PROPS = "persistent=false&useJmx=false";
 	public final static String QUEUE_NAME  = "queue";
+	public final static String TOPIC_NAME   = "queue";
 }
