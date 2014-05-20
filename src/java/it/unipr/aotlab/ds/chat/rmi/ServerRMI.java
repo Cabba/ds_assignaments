@@ -78,9 +78,14 @@ public class ServerRMI {
 				m_history.add(o);
 			}
 
-		} catch (RemoteException | InterruptedException | AlreadyBoundException e) {
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e){
+			e.printStackTrace();
+		} catch( AlreadyBoundException e){
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void broadcast(Command command) {
@@ -88,7 +93,9 @@ public class ServerRMI {
 		for (int i = 0; i < m_clients.size(); ++i) {
 			try {
 				m_clients.get(i).pushMessage(command);
-			} catch (RemoteException | InterruptedException e) {
+			} catch (RemoteException e ){
+				e.printStackTrace();
+			} catch(InterruptedException e){
 				e.printStackTrace();
 			}
 		}

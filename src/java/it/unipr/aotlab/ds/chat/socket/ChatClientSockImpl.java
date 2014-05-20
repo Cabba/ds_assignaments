@@ -32,7 +32,9 @@ public class ChatClientSockImpl implements ChatClient{
 		try {
 			m_multicastSocket.receive(data);
 			o = Utils.toObject(data.getData());
-		} catch (ClassNotFoundException | IOException e) {
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e){
 			e.printStackTrace();
 		}
 		return (Command) o;

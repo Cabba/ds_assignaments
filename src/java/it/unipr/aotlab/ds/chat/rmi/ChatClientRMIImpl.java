@@ -37,18 +37,25 @@ public class ChatClientRMIImpl implements ChatClient {
 			m_clientRemote = new CallbackClient();
 			// Register the client class into the client subscriber
 			m_subscriber = (IClientSubscriber) reg.lookup("client_subscriber");
-			System.out.println("[CLIENT] Registering the client in the client subscriber.");
-			boolean success = m_subscriber.subscribe(n, (ICallbackClient) m_clientRemote);
+			System.out
+					.println("[CLIENT] Registering the client in the client subscriber.");
+			boolean success = m_subscriber.subscribe(n,
+					(ICallbackClient) m_clientRemote);
 
 			if (success == false)
 				return false;
 
-			System.out.print("[CLIENT] Sending a join request to the server ...");
+			System.out
+					.print("[CLIENT] Sending a join request to the server ...");
 			m_server = (ICallbackServer) reg.lookup("server");
 			m_server.pushMessage(new Join(n));
 			System.out.print("ok.\n");
 
-		} catch (RemoteException | NotBoundException | InterruptedException e) {
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		return true;
@@ -58,7 +65,9 @@ public class ChatClientRMIImpl implements ChatClient {
 	public void send(String n, String m) {
 		try {
 			m_server.pushMessage(new Send(n, m));
-		} catch (RemoteException | InterruptedException e) {
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch(InterruptedException e){
 			e.printStackTrace();
 		}
 	}
@@ -67,9 +76,10 @@ public class ChatClientRMIImpl implements ChatClient {
 	public void leave(String n) {
 		try {
 			m_server.pushMessage(new Leave(n));
-		} catch (RemoteException | InterruptedException e) {
+		} catch (RemoteException e ) {
+			e.printStackTrace();
+		} catch (InterruptedException e){
 			e.printStackTrace();
 		}
 	}
-
 }
