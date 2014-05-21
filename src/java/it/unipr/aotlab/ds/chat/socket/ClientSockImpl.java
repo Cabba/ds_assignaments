@@ -18,7 +18,7 @@ import it.unipr.aotlab.ds.chat.command.Join;
 import it.unipr.aotlab.ds.chat.command.Leave;
 import it.unipr.aotlab.ds.chat.command.Send;
 
-public class ChatClientSockImpl implements ChatClient{
+public class ClientSockImpl implements ChatClient{
 
 	private Socket m_connectionSocket;
 	private MulticastSocket m_multicastSocket;

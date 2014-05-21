@@ -11,7 +11,7 @@ import it.unipr.aotlab.ds.chat.command.Join;
 import it.unipr.aotlab.ds.chat.command.Leave;
 import it.unipr.aotlab.ds.chat.command.Send;
 
-public class ChatClientRMIImpl implements ChatClient {
+public class ClientRMIImpl implements ChatClient {
 
 	CallbackClient m_clientRemote;
 	IClientSubscriber m_subscriber;
