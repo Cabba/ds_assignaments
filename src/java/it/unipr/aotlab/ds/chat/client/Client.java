@@ -11,7 +11,7 @@ public class Client {
       // Decomment the next line for socket implementation of the chat
       // ChatGui cg = new ChatGui(new ChatClientSockImpl());
       
-      ChatGui cg = new ChatGui( new ClientJMSImpl() );
+      ChatGui cg = new ChatGui( new ChatClientRMIImpl() );
       cg.listen();
     }
     catch(Exception e){

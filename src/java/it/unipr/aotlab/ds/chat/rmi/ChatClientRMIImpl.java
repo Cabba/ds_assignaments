@@ -42,8 +42,10 @@ public class ChatClientRMIImpl implements ChatClient {
 			boolean success = m_subscriber.subscribe(n,
 					(ICallbackClient) m_clientRemote);
 
-			if (success == false)
+			if (success == false){
+				System.out.println("[CLIENT] A problem is occurred, sorry.");
 				return false;
+			}
 
 			System.out
 					.print("[CLIENT] Sending a join request to the server ...");
